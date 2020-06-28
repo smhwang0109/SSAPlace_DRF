@@ -15,7 +15,6 @@ class TeamListView(APIView):
     def get(self, request):
         teams = Team.objects.all()
         teams = sorted(teams, key=lambda team: team.popularity, reverse=True)
-
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
     
@@ -34,8 +33,20 @@ class TeamDetailView(APIView):
         serializer = TeamSerializer(team)
         return Response(serializer.data)
     
-    # def post(self, request, team_id):
-    #     team = get_team(team_id)
+    # TeamUpdate
+    def put(self, request, team_id):
+        team = get_team(team_id)
+        serializer = TeamSerializer(team, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    
+    # TeamDelete
+    def delete(self, request, team_id):
+        team = self.get_team(team_id)
+        team.delete()
+        return Response()
 
         
 
@@ -46,12 +57,12 @@ def get_collect_team(collect_team_id):
 class CollectTeamListView(APIView):
     # CollectTeamList
     def get(self, request):
-        collectTeams = CollectTeam.objects.all()
-        collectTeams = sorted(collectTeams, key=lambda collectTeam: collectTeam.popularity, reverse=True)
-
-        serializer = CollectTeamSerializer(collectTeams, many=True)
+        collect_teams = CollectTeam.objects.all()
+        collect_teams = sorted(collect_teams, key=lambda collect_team: collect_team.popularity, reverse=True)
+        serializer = CollectTeamSerializer(collect_teams, many=True)
         return Response(serializer.data)
     
+class CollectTeamCreateView(APIView):
     # CollectTeamCreate
     def post(self, request, team_id):
         team = get_object_or_404(Team, pk=team_id)
@@ -61,26 +72,34 @@ class CollectTeamListView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
 
-# class ArticleDetailView(APIView):
-#     # ArticleDetail
-#     def get(self, request, article_id):
-#         article = get_article(article_id)
-#         article.hit += 1
-#         article.save()
-#         serializer = ArticleSerializer(article)
-#         return Response(serializer.data)
+class CollectMemberCreateView(APIView):
+    # CollectMemberCreate
+    def post(self, request, team_id, collect_team_id):
+        collect_team = get_object_or_404(CollectTeam, pk=collect_team_id)
+        serializer = CollectMemberSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(collect_team=collect_team)
+            return Response(serializer.data)
+        return Response(serializer.errors)
 
-#     # ArticleUpdate
-#     def put(self, request, article_id):
-#         article = get_article(article_id)
-#         serializer = ArticleSerializer(article, data=request.data)
-#         if serializer.is_valid(raise_exception=True):
-#             serializer.save()
-#             return Response(serializer.data)
-#         return Response(serializer.errors)
+class CollectTeamDetailView(APIView):
+    # CollectTeamDetail
+    def get(self, request, collect_team_id):
+        collect_team = get_collect_team(collect_team_id)
+        serializer = CollectTeamSerializer(collect_team)
+        return Response(serializer.data)
+
+    # CollectTeamUpdate
+    def put(self, request, collect_team_id):
+        collect_team = get_collect_team(collect_team_id)
+        serializer = CollectTeamSerializer(collect_team, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
     
-#     # ArticleDelete
-#     def delete(self, request, article_id):
-#         article = self.get_article(article_id)
-#         article.delete()
-#         return Response()
+    # CollectTeamDelete
+    def delete(self, request, collect_team_id):
+        collect_team = self.get_collect_team(collect_team_id)
+        collect_team.delete()
+        return Response()

@@ -19,7 +19,7 @@ class CollectTeamSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CollectMemberSerializer(serializers.ModelSerializer):
-    collectTeam = CollectTeamSerializer(required=False)
+    collect_team = CollectTeamSerializer(required=False)
 
     class Meta:
         model = CollectMember

@@ -10,13 +10,13 @@ class Interest(models.Model):
     interest = models.CharField(max_length=30)
 
 class Role(models.Model):
-    ROLE_CHOICES = [
-        ('무관', '무관'),
-        ('Frontend', 'Frontend'),
-        ('Backend', 'Backend'),
-        ('Fullstack', 'Fullstack'),
-    ]
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='무관')
+    # ROLE_CHOICES = [
+    #     ('무관', '무관'),
+    #     ('Frontend', 'Frontend'),
+    #     ('Backend', 'Backend'),
+    #     ('Fullstack', 'Fullstack'),
+    # ]
+    role = models.CharField(max_length=20)
 
 class Major(models.Model):
     Major = models.BooleanField()
@@ -69,7 +69,7 @@ class CollectTeam(models.Model):
     # 연락처
     contact = models.CharField(max_length=11)
     # 공개 설정
-    open = models.BooleanField()
+    open = models.BooleanField(default=True)
     # 모집 인원
     collectCount = models.IntegerField()
     # 팀 모집 관심
@@ -92,7 +92,7 @@ class CollectMember(models.Model):
     ## 전공/비전공
     major = models.ManyToManyField(Major, related_name='collect_members', through='CollectMemberMajor')
     # 우대 조건
-    preferential = models.TextField()
+    preferential = models.TextField(null=True)
 
 
 
