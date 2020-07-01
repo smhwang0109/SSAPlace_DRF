@@ -64,5 +64,7 @@
     {"model": "teams.UseLanguage", "fields": {"language": "ColdFusion"}},
     {"model": "teams.role", "fields": {"role": "Front End"}},
     {"model": "teams.role", "fields": {"role": "Back End"}},
-    {"model": "teams.role", "fields": {"role": "Full Stack"}}
+    {"model": "teams.role", "fields": {"role": "Full Stack"}},
+    {"model": "teams.major", "fields": {"major": "전공자"}},
+    {"model": "teams.major", "fields": {"major": "비전공자"}}
 ]

@@ -10,16 +10,10 @@ class Interest(models.Model):
     interest = models.CharField(max_length=30)
 
 class Role(models.Model):
-    # ROLE_CHOICES = [
-    #     ('무관', '무관'),
-    #     ('Frontend', 'Frontend'),
-    #     ('Backend', 'Backend'),
-    #     ('Fullstack', 'Fullstack'),
-    # ]
     role = models.CharField(max_length=20)
 
 class Major(models.Model):
-    Major = models.BooleanField()
+    major = models.CharField(max_length=10)
 
 
 class UseLanguage(models.Model):

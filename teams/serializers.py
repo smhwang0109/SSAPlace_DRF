@@ -1,7 +1,7 @@
 from django.core import serializers as django_serializers
 
 from rest_framework import serializers
-from .models import Team, CollectTeam, CollectMember
+from .models import Team, CollectTeam, CollectMember, Interest, Role, Major, UseLanguage
 from accounts.serializers import UserSerializer
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -23,4 +23,24 @@ class CollectMemberSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CollectMember
+        fields = '__all__'
+
+class InterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Interest
+        fields = '__all__'
+
+class RoleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = '__all__'
+
+class MajorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Major
+        fields = '__all__'
+
+class UseLanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UseLanguage
         fields = '__all__'

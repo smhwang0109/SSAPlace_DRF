@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 
-from .models import Team, CollectTeam, CollectMember
-from .serializers import TeamSerializer, CollectTeamSerializer, CollectMemberSerializer
+from .models import Team, CollectTeam, CollectMember, Interest, Role, Major, UseLanguage
+from .serializers import TeamSerializer, CollectTeamSerializer, CollectMemberSerializer, InterestSerializer, RoleSerializer, MajorSerializer, UseLanguageSerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -103,3 +103,33 @@ class CollectTeamDetailView(APIView):
         collect_team = self.get_collect_team(collect_team_id)
         collect_team.delete()
         return Response()
+
+
+
+
+# 부분 모델 가져오기
+
+class InterestListView(APIView):
+    def get(self, request):
+        interests = Interest.objects.all()
+        serializer = InterestSerializer(interests, many=True)
+        return Response(serializer.data)
+
+class RoleListView(APIView):
+    def get(self, request):
+        roles = Role.objects.all()
+        serializer = RoleSerializer(roles, many=True)
+        return Response(serializer.data)
+
+class MajorListView(APIView):
+    def get(self, request):
+        majors = Major.objects.all()
+        serializer = MajorSerializer(majors, many=True)
+        return Response(serializer.data)
+
+class UseLanguageListView(APIView):
+    def get(self, request):
+        use_languages = UseLanguage.objects.all()
+        serializer = UseLanguageSerializer(use_languages, many=True)
+        return Response(serializer.data)
+        
