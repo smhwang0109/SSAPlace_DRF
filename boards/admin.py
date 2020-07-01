@@ -1,7 +1,9 @@
 from django.contrib import admin
-from .models import Board, Article, ArticleLike, ArticleComment
+from .models import SsafyArticle, SsafyArticleComment, SsafyArticleLike, FreeArticle, FreeArticleComment, FreeArticleLike
 
-admin.site.register(Board)
-admin.site.register(Article)
-admin.site.register(ArticleLike)
-admin.site.register(ArticleComment)
+admin.site.register(SsafyArticle)
+admin.site.register(SsafyArticleComment)
+admin.site.register(SsafyArticleLike)
+admin.site.register(FreeArticle)
+admin.site.register(FreeArticleComment)
+admin.site.register(FreeArticleLike)
