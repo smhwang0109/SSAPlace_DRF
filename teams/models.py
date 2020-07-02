@@ -35,8 +35,6 @@ class Team(models.Model):
     interests = models.ManyToManyField(Interest, related_name='teams', through='TeamInterest')
     # 현재 팀원 수
     currentMembers = models.IntegerField()
-    # 목표 팀원 수
-    finalMembers = models.IntegerField()
     # 주 모임지역
     residence = models.CharField(max_length=100)
     # 주 사용 언어/프레임워크

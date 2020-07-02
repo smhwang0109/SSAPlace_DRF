@@ -16,5 +16,5 @@ urlpatterns = [
     path('interest/', views.InterestListView.as_view()),
     path('role/', views.RoleListView.as_view()),
     path('major/', views.MajorListView.as_view()),
-    path('uselanguage/', views.UseLanguageListView.as_view()),
+    path('language/', views.UseLanguageListView.as_view()),
 ]

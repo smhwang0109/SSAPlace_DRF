@@ -21,7 +21,8 @@
     {"model": "teams.interest", "fields": {"interest": "UX"}},
     {"model": "teams.interest", "fields": {"interest": "UI"}},
     {"model": "teams.interest", "fields": {"interest": "모바일"}},
-    {"model": "teams.interest", "fields": {"interest": "SEO"}}
+    {"model": "teams.interest", "fields": {"interest": "SEO"}},
+    {"model": "teams.interest", "fields": {"interest": "미정"}}
 
 
 ]
