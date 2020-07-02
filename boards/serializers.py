@@ -44,6 +44,8 @@ class FreeArticleListSerializer(serializers.ModelSerializer):
 class FreeArticleDetailSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
     free_comments = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     class Meta:
         model = FreeArticle
         fields = '__all__'
