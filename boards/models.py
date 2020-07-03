@@ -30,7 +30,7 @@ class SsafyArticleComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ssafy_comments')
-    article = models.ForeignKey(SsafyArticle, on_delete=models.CASCADE, related_name='ssafy_comments')
+    article = models.ForeignKey(SsafyArticle, on_delete=models.CASCADE, related_name='comments')
 
 ### 자유게시판 모델
 
@@ -58,4 +58,4 @@ class FreeArticleComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='free_comments')
-    article = models.ForeignKey(FreeArticle, on_delete=models.CASCADE, related_name='free_comments')
+    article = models.ForeignKey(FreeArticle, on_delete=models.CASCADE, related_name='comments')

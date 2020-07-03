@@ -14,7 +14,6 @@ class SsafyArticleListSerializer(serializers.ModelSerializer):
 
 class SsafyArticleDetailSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
-    ssafy_comments = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     class Meta:
@@ -22,10 +21,13 @@ class SsafyArticleDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['hit']
 
-    def get_ssafy_comments(self, obj):
-        return django_serializers.serialize('json', obj.ssafy_comments.order_by('-created_at'), ensure_ascii=False)
+class SsafyArticleCommentListSerializer(serializers.ModelSerializer):
+    author = UserSerializer(required=False)
+    class Meta:
+        model = SsafyArticleComment
+        fields = '__all__'
 
-class SsafyArticleCommentSerializer(serializers.ModelSerializer):
+class SsafyArticleCommentDetailSerializer(serializers.ModelSerializer):
     author = UserSerializer(required=False)
     article = SsafyArticleDetailSerializer(required=False)
     class Meta:
@@ -43,7 +45,6 @@ class FreeArticleListSerializer(serializers.ModelSerializer):
 
 class FreeArticleDetailSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
-    free_comments = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     class Meta:
@@ -51,10 +52,13 @@ class FreeArticleDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['hit']
 
-    def get_free_comments(self, obj):
-        return django_serializers.serialize('json', obj.free_comments.order_by('-created_at'), ensure_ascii=False)
+class FreeArticleCommentListSerializer(serializers.ModelSerializer):
+    author = UserSerializer(required=False)
+    class Meta:
+        model = FreeArticleComment
+        fields = '__all__'
 
-class FreeArticleCommentSerializer(serializers.ModelSerializer):
+class FreeArticleCommentDetailSerializer(serializers.ModelSerializer):
     author = UserSerializer(required=False)
     article = FreeArticleDetailSerializer(required=False)
     class Meta:

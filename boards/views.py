@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 
 from .models import SsafyArticle, SsafyArticleComment, SsafyArticleLike, FreeArticle, FreeArticleComment, FreeArticleLike
-from .serializers import SsafyArticleListSerializer, SsafyArticleDetailSerializer, SsafyArticleCommentSerializer, FreeArticleListSerializer, FreeArticleDetailSerializer, FreeArticleCommentSerializer
+from .serializers import SsafyArticleListSerializer, SsafyArticleDetailSerializer, SsafyArticleCommentListSerializer, SsafyArticleCommentDetailSerializer, FreeArticleListSerializer, FreeArticleDetailSerializer, FreeArticleCommentListSerializer, FreeArticleCommentDetailSerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -54,10 +54,16 @@ class SsafyArticleDetailView(APIView):
         return Response()
 
 class SsafyArticleCommentListView(APIView):
+    # Ssafy ArticleCommentList
+    def get(self, request, article_id):
+        article = get_article(SsafyArticle, article_id)
+        serializer = SsafyArticleCommentListSerializer(article.comments, many=True)
+        return Response(serializer.data)
+
     # Ssafy ArticleCommentCreate
     def post(self, request, article_id):
         article = get_article(SsafyArticle, article_id)
-        serializer = SsafyArticleCommentSerializer(data=request.data)
+        serializer = SsafyArticleCommentDetailSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(author=request.user, article=article)
             return Response(serializer.data)
@@ -67,7 +73,7 @@ class SsafyArticleCommentDetailView(APIView):
     # SSAFY ArticleCommentUpdate
     def put(self, request, article_id, comment_id):
         comment = get_comment(SsafyArticleComment, comment_id)
-        serializer = SsafyArticleCommentSerializer(comment, data=request.data)
+        serializer = SsafyArticleCommentDetailSerializer(comment, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
@@ -144,10 +150,16 @@ class FreeArticleDetailView(APIView):
         return Response()
 
 class FreeArticleCommentListView(APIView):
+    # Free ArticleCommentList
+    def get(self, request, article_id):
+        article = get_article(FreeArticle, article_id)
+        serializer = FreeArticleCommentListSerializer(article.comments, many=True)
+        return Response(serializer.data)
+
     # Free ArticleCommentCreate
     def post(self, request, article_id):
         article = get_article(FreeArticle, article_id)
-        serializer = FreeArticleCommentSerializer(data=request.data)
+        serializer = FreeArticleCommentDetailSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(author=request.user, article=article)
             return Response(serializer.data)
@@ -157,7 +169,7 @@ class FreeArticleCommentDetailView(APIView):
     # Free ArticleCommentUpdate
     def put(self, request, article_id, comment_id):
         comment = get_comment(FreeArticleComment, comment_id)
-        serializer = FreeArticleCommentSerializer(comment, data=request.data)
+        serializer = FreeArticleCommentDetailSerializer(comment, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
