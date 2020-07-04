@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
+    name = models.CharField(max_length=50, null=True)
     self_introduction = models.CharField(null=True, max_length = 500)
     location = models.CharField(null=True, max_length = 100)
     email = models.EmailField(null=True)
@@ -14,7 +15,6 @@ class User(AbstractUser):
     # 주 사용 언어/프레임워크
     # front_language = models.ManyToManyField(UseLanguage, related_name='front_languages', through='FrontUse')
     # back_language = models.ManyToManyField(UseLanguage, related_name='back_languages', through='BackUse')
-    pass
 
 class Interest(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)

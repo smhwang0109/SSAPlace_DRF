@@ -7,5 +7,5 @@ urlpatterns = [
     path('myaccount/', views.MyAccount.as_view()),
     path('', views.UserListView.as_view()),
     path('<int:user_pk>/', views.Profile),
-    path('<int:user_pk>/edit/', views.ProfileEdit),
+    path('<int:user_pk>/edit/', views.ProfileEdit.as_view()),
 ]

@@ -35,7 +35,10 @@ class UserProfileSerializer(serializers.ModelSerializer):
     # skills = serializers.SerializerMethodField()
     class Meta:
         model = User
-        exclude = ['password',]
+        fields = ['self_introduction','location','email', 'instagram', 'github',
+        'facebook', 'homepage', 'linkedin','id', 'first_name']
+        # languages, skills도 추가해야함.
+        # exclude = ['password',]
     
     def get_teams(self, obj):
         team = obj.teams.all() 

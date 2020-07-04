@@ -6,7 +6,8 @@ from accounts.serializers import UserSerializer
 
 class TeamSerializer(serializers.ModelSerializer):
     leader = UserSerializer(required=False)
-
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     class Meta:
         model = Team
         fields = '__all__'

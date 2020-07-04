@@ -26,11 +26,10 @@ class Profile(APIView):
         return Response(serializer.data)
 
 class ProfileEdit(APIView):
-    def post(self, request):
+    def put(self, request, user_pk):
         user = request.user
-        serializer = UserProfileSerializer(user)
+        serializer = UserProfileSerializer(user, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            User = get_user_model()
             return Response(serializer.data)
         return Response(serializer.errors)
