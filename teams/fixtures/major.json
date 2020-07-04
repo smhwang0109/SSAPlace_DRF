@@ -1,4 +1,5 @@
 [
     {"model": "teams.major", "fields": {"major": "전공자"}},
-    {"model": "teams.major", "fields": {"major": "비전공자"}}
+    {"model": "teams.major", "fields": {"major": "비전공자"}},
+    {"model": "teams.major", "fields": {"major": "무관"}}
 ]
