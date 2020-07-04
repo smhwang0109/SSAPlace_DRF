@@ -1,6 +1,0 @@
-[
-    {"model": "teams.role", "fields": {"role": "무관"}},
-    {"model": "teams.role", "fields": {"role": "Front End"}},
-    {"model": "teams.role", "fields": {"role": "Back End"}},
-    {"model": "teams.role", "fields": {"role": "Full Stack"}}
-]

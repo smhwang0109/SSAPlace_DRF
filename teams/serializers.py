@@ -27,10 +27,15 @@ class CollectTeamSerializer(serializers.ModelSerializer):
     team = TeamSerializer(required=False)
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+
+    collect_members = serializers.SerializerMethodField()
     
     class Meta:
         model = CollectTeam
         fields = '__all__'
+
+    def get_collect_members(self, obj):
+        return django_serializers.serialize('json', obj.collect_members.all(), ensure_ascii=False)
 
 class CollectMemberSerializer(serializers.ModelSerializer):
     collect_team = CollectTeamSerializer(required=False)
