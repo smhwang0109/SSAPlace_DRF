@@ -9,13 +9,6 @@ from pytz import utc
 class Interest(models.Model):
     interest = models.CharField(max_length=30)
 
-class Role(models.Model):
-    role = models.CharField(max_length=20)
-
-class Major(models.Model):
-    major = models.CharField(max_length=10)
-
-
 class UseLanguage(models.Model):
     language = models.CharField(max_length=20)
 
@@ -34,7 +27,7 @@ class Team(models.Model):
     # 관심 분야
     interests = models.ManyToManyField(Interest, related_name='teams', through='TeamInterest')
     # 현재 팀원 수
-    currentMembers = models.IntegerField()
+    current_members = models.IntegerField()
     # 주 모임지역
     residence = models.CharField(max_length=100)
     # 주 사용 언어/프레임워크
@@ -55,6 +48,7 @@ class Team(models.Model):
 class CollectTeam(models.Model):
     team = models.OneToOneField(Team, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
+    oneline_description = models.CharField(max_length=300, default='')
     description = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,7 +57,7 @@ class CollectTeam(models.Model):
     # 공개 설정
     open = models.BooleanField(default=True)
     # 모집 인원
-    collectCount = models.IntegerField()
+    collect_count = models.IntegerField()
     # 팀 모집 관심
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_collect_teams', through='CollectTeamLike')
 
@@ -78,11 +72,11 @@ class CollectTeam(models.Model):
 class CollectMember(models.Model):
     collect_team = models.ForeignKey(CollectTeam, on_delete=models.CASCADE, related_name='collect_members')
     ## 희망 팀원 역할(백, 프론트)
-    role = models.ManyToManyField(Role, related_name='collect_members', through='CollectMemberRole')
+    role = models.CharField(max_length=30, default='무관')
     ## 사용 언어
     use_language = models.ManyToManyField(UseLanguage, related_name='collect_members', through='CollectMemberLanguage')
     ## 전공/비전공
-    major = models.ManyToManyField(Major, related_name='collect_members', through='CollectMemberMajor')
+    major = models.CharField(max_length=10, default='무관')
     # 우대 조건
     preferential = models.TextField(null=True)
 
@@ -117,14 +111,6 @@ class CollectTeamLike(models.Model):
     collect_team = models.ForeignKey(CollectTeam, on_delete=models.CASCADE)
     like_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
-class CollectMemberRole(models.Model):
-    collect_member = models.ForeignKey(CollectMember, on_delete=models.CASCADE)
-    role = models.ForeignKey(Role, on_delete=models.CASCADE)
-
 class CollectMemberLanguage(models.Model):
     collect_member = models.ForeignKey(CollectMember, on_delete=models.CASCADE)
     use_language = models.ForeignKey(UseLanguage, on_delete=models.CASCADE)
-
-class CollectMemberMajor(models.Model):
-    collect_member = models.ForeignKey(CollectMember, on_delete=models.CASCADE)
-    major = models.ForeignKey(Major, on_delete=models.CASCADE)
