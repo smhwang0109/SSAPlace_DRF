@@ -1,11 +1,16 @@
 from django.contrib import admin
-from .models import Team, CollectTeam, CollectMember, Interest, CollectMemberMajor, CollectMemberRole, UseLanguage, TeamInterest, TeamMember
+from .models import Team, CollectTeam, CollectMember, Interest, UseLanguage, TeamInterest, TeamMember
 
 
 @admin.register(Interest)
 class InterestAdmin(admin.ModelAdmin):
     list_display = ('id', 'interest')
     list_display_links = ('id', 'interest')
+
+@admin.register(UseLanguage)
+class UseLanguageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'language')
+    list_display_links = ('id', 'language')
 
 @admin.register(TeamInterest)
 class TeamInterestAdmin(admin.ModelAdmin):
@@ -16,11 +21,6 @@ class TeamInterestAdmin(admin.ModelAdmin):
 class TeamMemberAdmin(admin.ModelAdmin):
     list_display = ('id',)
     list_display_links = ('id',)
-
-@admin.register(UseLanguage)
-class UseLanguageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'language')
-    list_display_links = ('id', 'language')
 
 class CollectMemberInline(admin.StackedInline):
     model = CollectMember

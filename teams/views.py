@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 
-from .models import Team, CollectTeam, CollectMember, Interest, Role, Major, UseLanguage, TeamMember, TeamInterest, FrontUse, BackUse
-from .serializers import TeamSerializer, CollectTeamSerializer, CollectMemberSerializer, InterestSerializer, RoleSerializer, MajorSerializer, UseLanguageSerializer
+from .models import Team, CollectTeam, CollectMember, Interest, UseLanguage, TeamMember, TeamInterest, FrontUse, BackUse, CollectMemberLanguage
+from .serializers import TeamSerializer, CollectTeamSerializer, CollectMemberSerializer, InterestSerializer, UseLanguageSerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,8 +13,8 @@ def get_team(team_id):
 class TeamListView(APIView):
     # TeamList
     def get(self, request):
-        teams = Team.objects.all()
-        teams = sorted(teams, key=lambda team: team.popularity, reverse=True)
+        teams = Team.objects.filter(members=request.user).distinct()
+        teams = sorted(teams, key=lambda team: team.updated_at, reverse=True)
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
     
@@ -93,19 +93,22 @@ class CollectTeamCreateView(APIView):
     # CollectTeamCreate
     def post(self, request, team_id):
         team = get_object_or_404(Team, pk=team_id)
-        serializer = CollectTeamSerializer(data=request.data)
+        serializer = CollectTeamSerializer(data=request.data[0])
         if serializer.is_valid(raise_exception=True):
             serializer.save(team=team)
-            return Response(serializer.data)
-        return Response(serializer.errors)
-
-class CollectMemberCreateView(APIView):
-    # CollectMemberCreate
-    def post(self, request, team_id, collect_team_id):
-        collect_team = get_object_or_404(CollectTeam, pk=collect_team_id)
-        serializer = CollectMemberSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save(collect_team=collect_team)
+            # CollectMemberCreate
+            collect_team = get_object_or_404(CollectTeam, id=serializer.data['id'])
+            for i in range(1, len(request.data)):
+                serializer = CollectMemberSerializer(data=request.data[i])
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save(collect_team=collect_team)
+                    collect_member = get_object_or_404(CollectMember, id=serializer.data['id'])
+                    for language_id in request.data[i]['use_language']:
+                        language = get_object_or_404(UseLanguage, id=language_id)
+                        language_use = CollectMemberLanguage()
+                        language_use.collect_member = collect_member
+                        language_use.use_language = language
+                        language_use.save()
             return Response(serializer.data)
         return Response(serializer.errors)
 
@@ -140,18 +143,6 @@ class InterestListView(APIView):
     def get(self, request):
         interests = Interest.objects.all()
         serializer = InterestSerializer(interests, many=True)
-        return Response(serializer.data)
-
-class RoleListView(APIView):
-    def get(self, request):
-        roles = Role.objects.all()
-        serializer = RoleSerializer(roles, many=True)
-        return Response(serializer.data)
-
-class MajorListView(APIView):
-    def get(self, request):
-        majors = Major.objects.all()
-        serializer = MajorSerializer(majors, many=True)
         return Response(serializer.data)
 
 class UseLanguageListView(APIView):
