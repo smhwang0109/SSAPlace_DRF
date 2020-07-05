@@ -186,7 +186,7 @@ class FreeArticleDetailView(APIView):
         article = get_article(FreeArticle, article_id)
         for freearticletag in FreeArticleTag.objects.filter(article=article):
             freearticletag.delete()
-            
+
         serializer = FreeArticleDetailSerializer(article, data=request.data['body'])
         if serializer.is_valid(raise_exception=True):
             serializer.save()
