@@ -138,7 +138,11 @@ class SsafyArticleSearchView(APIView):
     def get(self, request, keyword):
         searched_by_title = SsafyArticle.objects.filter(title__icontains=keyword)
         searched_by_content = SsafyArticle.objects.filter(content__icontains=keyword)
-        searched_articles = searched_by_title.union(searched_by_content).order_by('-created_at')
+        searched_by_tag = SsafyArticle.objects.none()
+        for tag in Tag.objects.filter(name__icontains=keyword):
+            searched_by_tag = searched_by_tag.union(tag.ssafy_articles.all())
+
+        searched_articles = searched_by_title.union(searched_by_content).union(searched_by_tag).order_by('-created_at')
         serializer = SsafyArticleListSerializer(searched_articles, many=True)
         return Response(serializer.data)
 
@@ -260,7 +264,11 @@ class FreeArticleSearchView(APIView):
     def get(self, request, keyword):
         searched_by_title = FreeArticle.objects.filter(title__icontains=keyword)
         searched_by_content = FreeArticle.objects.filter(content__icontains=keyword)
-        searched_articles = searched_by_title.union(searched_by_content).order_by('-created_at')
+        searched_by_tag = FreeArticle.objects.none()
+        for tag in Tag.objects.filter(name__icontains=keyword):
+            searched_by_tag = searched_by_tag.union(tag.free_articles.all())
+
+        searched_articles = searched_by_title.union(searched_by_content).union(searched_by_tag).order_by('-created_at')
         serializer = FreeArticleListSerializer(searched_articles, many=True)
         return Response(serializer.data)
 

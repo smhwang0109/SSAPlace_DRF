@@ -14,10 +14,11 @@ class TagListSerializer(serializers.ModelSerializer):
 class SsafyArticleListSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
     created_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
     tags = TagListSerializer(required=False, many=True)
     class Meta:
         model = SsafyArticle
-        fields = ['id', 'title', 'hit', 'author', 'created_at', 'tags']
+        fields = ['id', 'title', 'hit', 'author', 'created_at', 'updated_at', 'tags', 'like_users']
 
 class SsafyArticleCommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(required=False)
@@ -33,7 +34,6 @@ class SsafyArticleDetailSerializer(serializers.ModelSerializer):
     comments = SsafyArticleCommentSerializer(required=False, many=True)
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
-    like_users = UserSerializer(required=False, many=True)
     tags = TagListSerializer(required=False, many=True)
     class Meta:
         model = SsafyArticle
@@ -46,10 +46,11 @@ class SsafyArticleDetailSerializer(serializers.ModelSerializer):
 class FreeArticleListSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
     created_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
     tags = TagListSerializer(required=False, many=True)
     class Meta:
         model = FreeArticle
-        fields = ['id', 'title', 'hit', 'author', 'created_at', 'tags']
+        fields = ['id', 'title', 'hit', 'author', 'created_at', 'updated_at', 'tags', 'like_users']
 
 class FreeArticleCommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(required=False)
