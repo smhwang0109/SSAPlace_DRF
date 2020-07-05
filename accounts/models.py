@@ -2,7 +2,13 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
+from teams.models import Interest, UseLanguage
+
 class User(AbstractUser):
+    pass
+
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True)
     self_introduction = models.CharField(null=True, max_length = 500)
     location = models.CharField(null=True, max_length = 100)
@@ -11,15 +17,14 @@ class User(AbstractUser):
     github = models.URLField(null=True) 
     facebook = models.URLField(null=True)
     homepage =  models.URLField(null=True)
-    linkedin =  models.URLField(null=True) 
-    # 주 사용 언어/프레임워크
-    # front_language = models.ManyToManyField(UseLanguage, related_name='front_languages', through='FrontUse')
-    # back_language = models.ManyToManyField(UseLanguage, related_name='back_languages', through='BackUse')
+    linkedin =  models.URLField(null=True)
+    interests = models.ManyToManyField(Interest, related_name='users', through='ProfileInterest')
+    languages = models.ManyToManyField(UseLanguage, related_name='users', through='ProfileLanguage')
 
-class Interest(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
-    interest = models.CharField(max_length=30)
+class ProfileInterest(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    interest = models.ForeignKey(Interest, on_delete=models.CASCADE)
 
-class Languages(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
-    language = models.CharField(max_length=20)
+class ProfileLanguage(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    language = models.ForeignKey(UseLanguage, on_delete=models.CASCADE)

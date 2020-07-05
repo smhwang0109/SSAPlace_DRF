@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 
-from .models import SsafyArticle, SsafyArticleComment, SsafyArticleLike, FreeArticle, FreeArticleComment, FreeArticleLike, Tag
-from .serializers import SsafyArticleListSerializer, SsafyArticleDetailSerializer, SsafyArticleCommentListSerializer, SsafyArticleCommentDetailSerializer, FreeArticleListSerializer, FreeArticleDetailSerializer, FreeArticleCommentListSerializer, FreeArticleCommentDetailSerializer, TagListSerializer
+from .models import SsafyArticle, SsafyArticleComment, SsafyArticleLike, FreeArticle, FreeArticleComment, FreeArticleLike, Tag, SsafyArticleTag, FreeArticleTag
+from .serializers import SsafyArticleListSerializer, SsafyArticleDetailSerializer, SsafyArticleCommentSerializer, FreeArticleListSerializer, FreeArticleDetailSerializer, FreeArticleCommentSerializer, TagListSerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,11 +17,9 @@ def get_comment(model, comment_id):
 class TagListView(APIView):
     def get(self, request):
         tags = Tag.objects.all()
-        #serializer = TagListSerializer(tags, many=True)
         data = []
         for tag in tags:
             data.append(tag.name)
-
         return Response(data)
 
 ### SSAFY 게시판
@@ -34,9 +32,21 @@ class SsafyArticleListView(APIView):
     
     # SSAFY ArticleCreate
     def post(self, request):
-        serializer = SsafyArticleDetailSerializer(data=request.data)
+        serializer = SsafyArticleDetailSerializer(data=request.data['body'])
         if serializer.is_valid(raise_exception=True):
             serializer.save(author=request.user)
+            article = get_object_or_404(SsafyArticle, id=serializer.data['id'])
+            for tag_name in request.data['tags']:
+                try:
+                    tag = get_object_or_404(Tag, name=tag_name)
+                except:
+                    tag = Tag()
+                    tag.name = tag_name
+                    tag.save()
+                ssafyarticletag = SsafyArticleTag()
+                ssafyarticletag.article = article
+                ssafyarticletag.tag = tag
+                ssafyarticletag.save()
             return Response(serializer.data)
         return Response(serializer.errors)
 
@@ -52,9 +62,23 @@ class SsafyArticleDetailView(APIView):
     # SSAFY ArticleUpdate
     def put(self, request, article_id):
         article = get_article(SsafyArticle, article_id)
-        serializer = SsafyArticleDetailSerializer(article, data=request.data)
+        for ssafyarticletag in SsafyArticleTag.objects.filter(article=article):
+            ssafyarticletag.delete()
+
+        serializer = SsafyArticleDetailSerializer(article, data=request.data['body'])
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            for tag_name in request.data['tags']:
+                try:
+                    tag = get_object_or_404(Tag, name=tag_name)
+                except:
+                    tag = Tag()
+                    tag.name = tag_name
+                    tag.save()
+                ssafyarticletag = SsafyArticleTag()
+                ssafyarticletag.article = article
+                ssafyarticletag.tag = tag
+                ssafyarticletag.save()
             return Response(serializer.data)
         return Response(serializer.errors)
     
@@ -68,13 +92,13 @@ class SsafyArticleCommentListView(APIView):
     # Ssafy ArticleCommentList
     def get(self, request, article_id):
         article = get_article(SsafyArticle, article_id)
-        serializer = SsafyArticleCommentListSerializer(article.comments, many=True)
+        serializer = SsafyArticleCommentSerializer(article.comments, many=True)
         return Response(serializer.data)
 
     # Ssafy ArticleCommentCreate
     def post(self, request, article_id):
         article = get_article(SsafyArticle, article_id)
-        serializer = SsafyArticleCommentDetailSerializer(data=request.data)
+        serializer = SsafyArticleCommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(author=request.user, article=article)
             return Response(serializer.data)
@@ -84,7 +108,7 @@ class SsafyArticleCommentDetailView(APIView):
     # SSAFY ArticleCommentUpdate
     def put(self, request, article_id, comment_id):
         comment = get_comment(SsafyArticleComment, comment_id)
-        serializer = SsafyArticleCommentDetailSerializer(comment, data=request.data)
+        serializer = SsafyArticleCommentSerializer(comment, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
@@ -130,9 +154,21 @@ class FreeArticleListView(APIView):
     
     # Free ArticleCreate
     def post(self, request):
-        serializer = FreeArticleDetailSerializer(data=request.data)
+        serializer = FreeArticleDetailSerializer(data=request.data['body'])
         if serializer.is_valid(raise_exception=True):
             serializer.save(author=request.user)
+            article = get_object_or_404(FreeArticle, id=serializer.data['id'])
+            for tag_name in request.data['tags']:
+                try:
+                    tag = get_object_or_404(Tag, name=tag_name)
+                except:
+                    tag = Tag()
+                    tag.name = tag_name
+                    tag.save()
+                freearticletag = FreeArticleTag()
+                freearticletag.article = article
+                freearticletag.tag = tag
+                freearticletag.save()
             return Response(serializer.data)
         return Response(serializer.errors)
 
@@ -148,9 +184,23 @@ class FreeArticleDetailView(APIView):
     # Free ArticleUpdate
     def put(self, request, article_id):
         article = get_article(FreeArticle, article_id)
-        serializer = FreeArticleDetailSerializer(article, data=request.data)
+        for freearticletag in FreeArticleTag.objects.filter(article=article):
+            freearticletag.delete()
+            
+        serializer = FreeArticleDetailSerializer(article, data=request.data['body'])
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            for tag_name in request.data['tags']:
+                try:
+                    tag = get_object_or_404(Tag, name=tag_name)
+                except:
+                    tag = Tag()
+                    tag.name = tag_name
+                    tag.save()
+                freearticletag = FreeArticleTag()
+                freearticletag.article = article
+                freearticletag.tag = tag
+                freearticletag.save()
             return Response(serializer.data)
         return Response(serializer.errors)
     
@@ -164,13 +214,13 @@ class FreeArticleCommentListView(APIView):
     # Free ArticleCommentList
     def get(self, request, article_id):
         article = get_article(FreeArticle, article_id)
-        serializer = FreeArticleCommentListSerializer(article.comments, many=True)
+        serializer = FreeArticleCommentSerializer(article.comments, many=True)
         return Response(serializer.data)
 
     # Free ArticleCommentCreate
     def post(self, request, article_id):
         article = get_article(FreeArticle, article_id)
-        serializer = FreeArticleCommentDetailSerializer(data=request.data)
+        serializer = FreeArticleCommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(author=request.user, article=article)
             return Response(serializer.data)
@@ -180,7 +230,7 @@ class FreeArticleCommentDetailView(APIView):
     # Free ArticleCommentUpdate
     def put(self, request, article_id, comment_id):
         comment = get_comment(FreeArticleComment, comment_id)
-        serializer = FreeArticleCommentDetailSerializer(comment, data=request.data)
+        serializer = FreeArticleCommentSerializer(comment, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
