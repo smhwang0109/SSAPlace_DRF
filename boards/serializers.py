@@ -1,16 +1,23 @@
 from django.core import serializers as django_serializers
 
 from rest_framework import serializers
-from .models import SsafyArticle, SsafyArticleComment, FreeArticle, FreeArticleComment
+from .models import SsafyArticle, SsafyArticleComment, FreeArticle, FreeArticleComment, Tag
 from accounts.serializers import UserSerializer
+
+### Tags
+class TagListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 ### SSAFY 게시판
 
 class SsafyArticleListSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
     class Meta:
         model = SsafyArticle
-        fields = ['id', 'title', 'hit', 'author']
+        fields = ['id', 'title', 'hit', 'author', 'created_at']
 
 class SsafyArticleDetailSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
@@ -39,9 +46,10 @@ class SsafyArticleCommentDetailSerializer(serializers.ModelSerializer):
 
 class FreeArticleListSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
     class Meta:
         model = FreeArticle
-        fields = ['id', 'title', 'hit', 'author']
+        fields = ['id', 'title', 'hit', 'author', 'created_at']
 
 class FreeArticleDetailSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
