@@ -22,4 +22,7 @@ urlpatterns = [
 
     ### Global Article Search
     path('search/<str:keyword>/', views.GlobalArticleSearchView.as_view()),
+
+    ### Tags
+    path('tags/', views.TagListView.as_view()),
 ]

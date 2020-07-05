@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 
-from .models import SsafyArticle, SsafyArticleComment, SsafyArticleLike, FreeArticle, FreeArticleComment, FreeArticleLike
-from .serializers import SsafyArticleListSerializer, SsafyArticleDetailSerializer, SsafyArticleCommentListSerializer, SsafyArticleCommentDetailSerializer, FreeArticleListSerializer, FreeArticleDetailSerializer, FreeArticleCommentListSerializer, FreeArticleCommentDetailSerializer
+from .models import SsafyArticle, SsafyArticleComment, SsafyArticleLike, FreeArticle, FreeArticleComment, FreeArticleLike, Tag
+from .serializers import SsafyArticleListSerializer, SsafyArticleDetailSerializer, SsafyArticleCommentListSerializer, SsafyArticleCommentDetailSerializer, FreeArticleListSerializer, FreeArticleDetailSerializer, FreeArticleCommentListSerializer, FreeArticleCommentDetailSerializer, TagListSerializer
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,6 +12,17 @@ def get_article(model, article_id):
 
 def get_comment(model, comment_id):
     return get_object_or_404(model, id=comment_id)
+
+### Tags
+class TagListView(APIView):
+    def get(self, request):
+        tags = Tag.objects.all()
+        #serializer = TagListSerializer(tags, many=True)
+        data = []
+        for tag in tags:
+            data.append(tag.name)
+
+        return Response(data)
 
 ### SSAFY 게시판
 class SsafyArticleListView(APIView):

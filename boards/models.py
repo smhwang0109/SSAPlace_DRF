@@ -4,6 +4,9 @@ from django.conf import settings
 from datetime import datetime
 from pytz import utc
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
 ### SSAFY 게시판 모델
 
 class SsafyArticle(models.Model):
@@ -14,6 +17,7 @@ class SsafyArticle(models.Model):
     hit = models.IntegerField(default=0) # 조회수
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ssafy_articles')
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='ssafy_like_articles', through='SsafyArticleLike')
+    tags = models.ManyToManyField(Tag, related_name='ssafy_articles', through='SsafyArticleTag')
     
     @property
     def popularity(self):
@@ -32,6 +36,10 @@ class SsafyArticleComment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ssafy_comments')
     article = models.ForeignKey(SsafyArticle, on_delete=models.CASCADE, related_name='comments')
 
+class SsafyArticleTag(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    article = models.ForeignKey(SsafyArticle, on_delete=models.CASCADE)
+
 ### 자유게시판 모델
 
 class FreeArticle(models.Model):
@@ -42,7 +50,8 @@ class FreeArticle(models.Model):
     hit = models.IntegerField(default=0) # 조회수
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='free_articles')
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='free_like_articles', through='FreeArticleLike')
-    
+    tags = models.ManyToManyField(Tag, related_name='free_articles', through='FreeArticleTag')
+
     @property
     def popularity(self):
         now = datetime.utcnow()
@@ -59,3 +68,7 @@ class FreeArticleComment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='free_comments')
     article = models.ForeignKey(FreeArticle, on_delete=models.CASCADE, related_name='comments')
+
+class FreeArticleTag(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    article = models.ForeignKey(FreeArticle, on_delete=models.CASCADE)
