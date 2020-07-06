@@ -52,10 +52,16 @@ class ProfileDetail(APIView):
             for interest_id in request.data['interests']:
                 interest = get_object_or_404(Interest, id=interest_id)
                 if not ProfileInterest.objects.filter(profile=profile, interest=interest).exists():
-                    profile.interests.add(interest)
+                    profile_interest = ProfileInterest()
+                    profile_interest.profile = profile
+                    profile_interest.interest = interest
+                    profile_interest.save()
             for language_id in request.data['languages']:
                 language = get_object_or_404(UseLanguage, id=language_id)
                 if not ProfileLanguage.objects.filter(profile=profile, language=language).exists():
-                    profile.languages.add(language)
+                    profile_language = ProfileLanguage()
+                    profile_language.profile = profile
+                    profile_language.language = language
+                    profile_language.save()
             return Response(serializer.data)
         return Response(serializer.errors)

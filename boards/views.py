@@ -59,7 +59,7 @@ class ArticleListView(APIView):
                 except:
                     tag = Tag(name=tag_name)
                     tag.save()
-                article.tags.add(tag)
+                board_tag_model(tag=tag, article=article).save()
             return Response(serializer.data)
         return Response(serializer.errors)
 
@@ -102,7 +102,7 @@ class ArticleDetailView(APIView):
                 except:
                     tag = Tag(name=tag_name)
                     tag.save()
-                article.tags.add(tag)
+                board_tag_model(tag=tag, article=article).save()
             return Response(serializer.data)
         return Response(serializer.errors)
     
