@@ -78,7 +78,7 @@ class TeamDetailView(APIView):
 
 
 def get_collect_team(collect_team_id):
-    return get_object_or_404(CollectTeam, id=collect_team_id)
+    return get_object_or_404(CollectTeam, team_id=collect_team_id)
 
 class CollectTeamListView(APIView):
     # CollectTeamList
