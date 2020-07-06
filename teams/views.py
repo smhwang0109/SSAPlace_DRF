@@ -33,7 +33,6 @@ class TeamListView(APIView):
                 team_member.save()
             for interest_id in request.data['interests']:
                 interest = get_object_or_404(Interest, id=interest_id)
-                print(interest_id, interest)
                 team_interest = TeamInterest()
                 team_interest.team = team
                 team_interest.interest = interest

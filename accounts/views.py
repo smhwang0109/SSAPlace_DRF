@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import get_user_model
 
-from .models import User, Profile
+from .models import User, Profile, ProfileInterest, ProfileLanguage
+from teams.models import Interest, UseLanguage
 from .serializers import UserSerializer, ProfileSerializer
 
 from rest_framework.response import Response
@@ -11,10 +12,15 @@ def get_profile(user_pk):
     return get_object_or_404(Profile, user=user_pk)
 
 class MyAccount(APIView):
-    def get(self, request):
+    def post(self, request):
         user = request.user
         serializer = UserSerializer(user)
+        if not Profile.objects.filter(user=request.user.id).exists():
+            profile = Profile()
+            profile.user = user
+            profile.save()
         return Response(serializer.data)
+
 
 class UserListView(APIView):
     def get(self, request):
@@ -41,5 +47,15 @@ class ProfileDetail(APIView):
         serializer = ProfileSerializer(profile, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            profile.interests.clear()
+            profile.languages.clear()
+            for interest_id in request.data['interests']:
+                interest = get_object_or_404(Interest, id=interest_id)
+                if not ProfileInterest.objects.filter(profile=profile, interest=interest).exists():
+                    profile.interests.add(interest)
+            for language_id in request.data['languages']:
+                language = get_object_or_404(UseLanguage, id=language_id)
+                if not ProfileLanguage.objects.filter(profile=profile, language=language).exists():
+                    profile.languages.add(language)
             return Response(serializer.data)
         return Response(serializer.errors)

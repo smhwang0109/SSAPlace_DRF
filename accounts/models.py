@@ -15,7 +15,7 @@ class Profile(models.Model):
     email = models.EmailField(null=True)
     instagram = models.URLField(null=True)
     github = models.URLField(null=True) 
-    facebook = models.URLField(null=True)
+    facebook = models.URLField(null=True, blank=True)
     homepage =  models.URLField(null=True)
     linkedin =  models.URLField(null=True)
     interests = models.ManyToManyField(Interest, related_name='users', through='ProfileInterest')
@@ -26,5 +26,5 @@ class ProfileInterest(models.Model):
     interest = models.ForeignKey(Interest, on_delete=models.CASCADE)
 
 class ProfileLanguage(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     language = models.ForeignKey(UseLanguage, on_delete=models.CASCADE)
