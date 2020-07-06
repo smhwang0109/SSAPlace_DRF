@@ -4,11 +4,12 @@ from django.conf import settings
 from datetime import datetime
 from pytz import utc
 
+### Tag
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
 
-### SSAFY 게시판 모델
 
+### 싸피 게시판
 class SsafyArticle(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -40,8 +41,8 @@ class SsafyArticleTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     article = models.ForeignKey(SsafyArticle, on_delete=models.CASCADE)
 
-### 자유게시판 모델
 
+### 자유 게시판
 class FreeArticle(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
