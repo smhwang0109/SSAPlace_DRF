@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Tag, SsafyArticle, SsafyArticleComment, SsafyArticleLike, SsafyArticleTag, FreeArticle, FreeArticleComment, FreeArticleLike, FreeArticleTag
+from .models import Tag, SSAFYArticle, SSAFYArticleComment, SSAFYArticleLike, SSAFYArticleTag, FreeArticle, FreeArticleComment, FreeArticleLike, FreeArticleTag, CodeArticle, CodeArticleComment, CodeArticleLike, CodeArticleTag
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
@@ -7,20 +7,20 @@ class TagAdmin(admin.ModelAdmin):
     list_display_links = ['id', 'name']
 
 ### 싸피 게시판
-class SsafyArticleCommentInline(admin.StackedInline):
-    model = SsafyArticleComment
+class SSAFYArticleCommentInline(admin.StackedInline):
+    model = SSAFYArticleComment
 
-class SsafyArticleLikeInline(admin.StackedInline):
-    model = SsafyArticleLike
+class SSAFYArticleLikeInline(admin.StackedInline):
+    model = SSAFYArticleLike
 
-class SsafyArticleTagInline(admin.StackedInline):
-    model = SsafyArticleTag
+class SSAFYArticleTagInline(admin.StackedInline):
+    model = SSAFYArticleTag
 
-@admin.register(SsafyArticle)
-class SsafyArticleAdmin(admin.ModelAdmin):
+@admin.register(SSAFYArticle)
+class SSAFYArticleAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'content', 'created_at', 'updated_at', 'hit', 'author']
     list_display_links = ['id', 'title', 'content', 'created_at', 'updated_at', 'hit', 'author']
-    inlines = [SsafyArticleCommentInline, SsafyArticleLikeInline, SsafyArticleTagInline]
+    inlines = [SSAFYArticleCommentInline, SSAFYArticleLikeInline, SSAFYArticleTagInline]
 
 
 ### 자유 게시판
@@ -38,3 +38,20 @@ class FreeArticleAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'content', 'created_at', 'updated_at', 'hit', 'author']
     list_display_links = ['id', 'title', 'content', 'created_at', 'updated_at', 'hit', 'author']
     inlines = [FreeArticleCommentInline, FreeArticleLikeInline, FreeArticleTagInline]
+
+
+### 코드 게시판
+class CodeArticleCommentInline(admin.StackedInline):
+    model = CodeArticleComment
+
+class CodeArticleLikeInline(admin.StackedInline):
+    model = CodeArticleLike
+
+class CodeArticleTagInline(admin.StackedInline):
+    model = CodeArticleTag
+
+@admin.register(CodeArticle)
+class CodeArticleAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'content', 'created_at', 'updated_at', 'hit', 'author']
+    list_display_links = ['id', 'title', 'content', 'created_at', 'updated_at', 'hit', 'author']
+    inlines = [CodeArticleCommentInline, CodeArticleLikeInline, CodeArticleTagInline]
