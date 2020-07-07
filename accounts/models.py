@@ -5,7 +5,17 @@ from django.contrib.auth.models import AbstractUser
 from teams.models import Interest, UseLanguage
 
 class User(AbstractUser):
-    pass
+    messages_to = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='messages_from', through='MessageGroup')
+
+class MessageGroup(models.Model):
+    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='to_user')
+    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='from_user')
+
+class Message(models.Model):
+    message_group = models.ForeignKey(MessageGroup, on_delete=models.CASCADE, related_name='messages')
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

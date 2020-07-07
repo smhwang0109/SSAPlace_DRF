@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Profile, ProfileInterest, ProfileLanguage
+from .models import User, Profile, ProfileInterest, ProfileLanguage, MessageGroup, Message
 
 @admin.register(ProfileInterest)
 class ProfileInterestAdmin(admin.ModelAdmin):
@@ -13,6 +13,16 @@ class ProfileLanguageAdmin(admin.ModelAdmin):
 
 class ProfileInline(admin.StackedInline):
     model = Profile
+
+@admin.register(Message)
+class Message(admin.ModelAdmin):
+    list_display = ('id', 'message')
+    list_display_links = ('id',)
+
+@admin.register(MessageGroup)
+class Message(admin.ModelAdmin):
+    list_display = ('id', 'from_user', 'to_user')
+    list_display_links = ('id',)
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
