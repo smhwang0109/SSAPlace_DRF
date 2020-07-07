@@ -1,7 +1,7 @@
 from django.core import serializers as django_serializers
 
 from rest_framework import serializers
-from .models import SsafyArticle, SsafyArticleComment, FreeArticle, FreeArticleComment, Tag
+from .models import Tag, SSAFYArticle, SSAFYArticleComment, FreeArticle, FreeArticleComment, CodeArticle, CodeArticleComment
 from accounts.serializers import UserSerializer
 
 ### Tag
@@ -12,31 +12,31 @@ class TagListSerializer(serializers.ModelSerializer):
 
 
 ### 싸피 게시판
-class SsafyArticleListSerializer(serializers.ModelSerializer):    
+class SSAFYArticleListSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
     created_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
     tags = TagListSerializer(required=False, many=True)
     class Meta:
-        model = SsafyArticle
+        model = SSAFYArticle
         fields = ['id', 'title', 'hit', 'author', 'created_at', 'tags', 'like_users']
 
-class SsafyArticleCommentSerializer(serializers.ModelSerializer):
+class SSAFYArticleCommentSerializer(serializers.ModelSerializer):
     author = UserSerializer(required=False)
-    article = SsafyArticleListSerializer(required=False)
+    article = SSAFYArticleListSerializer(required=False)
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     class Meta:
-        model = SsafyArticleComment
+        model = SSAFYArticleComment
         fields = '__all__'
 
-class SsafyArticleDetailSerializer(serializers.ModelSerializer):    
+class SSAFYArticleDetailSerializer(serializers.ModelSerializer):    
     author = UserSerializer(required=False)
     created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
     updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
-    comments = SsafyArticleCommentSerializer(required=False, many=True)
+    comments = SSAFYArticleCommentSerializer(required=False, many=True)
     tags = TagListSerializer(required=False, many=True)
     class Meta:
-        model = SsafyArticle
+        model = SSAFYArticle
         fields = '__all__'
         read_only_fields = ['hit']
 
@@ -67,5 +67,35 @@ class FreeArticleDetailSerializer(serializers.ModelSerializer):
     tags = TagListSerializer(required=False, many=True)
     class Meta:
         model = FreeArticle
+        fields = '__all__'
+        read_only_fields = ['hit']
+
+
+### 코드 게시판
+class CodeArticleListSerializer(serializers.ModelSerializer):    
+    author = UserSerializer(required=False)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d", required=False)
+    tags = TagListSerializer(required=False, many=True)
+    class Meta:
+        model = CodeArticle
+        fields = ['id', 'title', 'hit', 'author', 'created_at', 'tags', 'like_users']
+
+class CodeArticleCommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer(required=False)
+    article = CodeArticleListSerializer(required=False)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+    class Meta:
+        model = CodeArticleComment
+        fields = '__all__'
+
+class CodeArticleDetailSerializer(serializers.ModelSerializer):    
+    author = UserSerializer(required=False)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+    updated_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M", required=False)
+    comments = CodeArticleCommentSerializer(required=False, many=True)
+    tags = TagListSerializer(required=False, many=True)
+    class Meta:
+        model = CodeArticle
         fields = '__all__'
         read_only_fields = ['hit']
