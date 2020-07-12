@@ -10,10 +10,15 @@ from rest_framework.views import APIView
 def get_team(team_id):
     return get_object_or_404(Team, id=team_id)
 
+def get_user(user_id):
+    User = get_user_model()
+    return get_object_or_404(User, id=user_id)
+
 class TeamListView(APIView):
     # TeamList
-    def get(self, request):
-        teams = Team.objects.filter(members=request.user).distinct()
+    def get(self, request, user_id):
+        user = get_user(user_id)
+        teams = Team.objects.filter(members=user).distinct()
         teams = sorted(teams, key=lambda team: team.updated_at, reverse=True)
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
@@ -52,7 +57,6 @@ class TeamListView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
     
-    
 class TeamDetailView(APIView):
     # TeamDetail
     def get(self, request, team_id):
@@ -60,50 +64,14 @@ class TeamDetailView(APIView):
         serializer = TeamSerializer(team)
         return Response(serializer.data)
     
-    # # TeamUpdate
-    # def put(self, request, team_id):
-    #     team = get_team(team_id)
-    #     serializer = TeamSerializer(team, data=request.data)
-    #     if serializer.is_valid(raise_exception=True):
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors)
-    
     # TeamUpdate
     def put(self, request, team_id):
         team = get_team(team_id)
         serializer = TeamSerializer(team, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            User = get_user_model()
-            team = get_object_or_404(Team, id=serializer.data['id'])
-            for member_id in request.data['members']:
-                member = get_object_or_404(User, id=member_id)
-                team_member = TeamMember()
-                team_member.team = team
-                team_member.member = member
-                team_member.save()
-            for interest_id in request.data['interests']:
-                interest = get_object_or_404(Interest, id=interest_id)
-                team_interest = TeamInterest()
-                team_interest.team = team
-                team_interest.interest = interest
-                team_interest.save()
-            for front_id in request.data['front_language']:
-                front = get_object_or_404(UseLanguage, id=front_id)
-                front_use = FrontUse()
-                front_use.team = team
-                front_use.front_language = front
-                front_use.save()
-            for back_id in request.data['back_language']:
-                back = get_object_or_404(UseLanguage, id=back_id)
-                back_use = BackUse()
-                back_use.team = team
-                back_use.back_language = back
-                back_use.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-    
     
     # TeamDelete
     def delete(self, request, team_id):
