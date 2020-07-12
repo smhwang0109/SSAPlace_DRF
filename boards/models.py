@@ -31,7 +31,7 @@ class SSAFYArticleLike(models.Model):
     article = models.ForeignKey(SSAFYArticle, on_delete=models.CASCADE)
 
 class SSAFYArticleComment(models.Model):
-    content = models.CharField(max_length=200)
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ssafy_comments')
@@ -64,7 +64,7 @@ class FreeArticleLike(models.Model):
     article = models.ForeignKey(FreeArticle, on_delete=models.CASCADE)
 
 class FreeArticleComment(models.Model):
-    content = models.CharField(max_length=200)
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='free_comments')
@@ -97,7 +97,7 @@ class CodeArticleLike(models.Model):
     article = models.ForeignKey(CodeArticle, on_delete=models.CASCADE)
 
 class CodeArticleComment(models.Model):
-    content = models.CharField(max_length=200)
+    content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='code_comments')
