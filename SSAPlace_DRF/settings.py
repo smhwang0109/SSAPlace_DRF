@@ -32,8 +32,6 @@ ALLOWED_HOSTS = ['.compute.amazonaws.com', '*']
 
 INSTALLED_APPS = [
     # pip
-    ## socket - channels
-    'channels',
     ## DRF
     'rest_framework',
     ## DRF - token auth
@@ -154,10 +152,6 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ORIGIN_WHITELIST = []
-
-
-# socket - channels
-ASGI_APPLICATION = 'SSAPlace_DRF.routing.application'
 
 
 # static
