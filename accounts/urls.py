@@ -9,4 +9,5 @@ urlpatterns = [
     path('<int:user_pk>/', views.ProfileDetail.as_view()),
 
     path('message-group/', views.MessageGroupListView.as_view()),
+    path('message/<int:to_user_id>/', views.MessageDetailView.as_view()),
 ]
