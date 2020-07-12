@@ -11,6 +11,13 @@ class MessageGroup(models.Model):
     from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='to_user')
     to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='from_user')
 
+    @property
+    def message_updated_at(self):
+        if self.messages.all():
+            return self.messages.all().order_by('-created_at')[0].created_at
+        else:
+            return False
+
 class Message(models.Model):
     message_group = models.ForeignKey(MessageGroup, on_delete=models.CASCADE, related_name='messages')
     message = models.TextField()
