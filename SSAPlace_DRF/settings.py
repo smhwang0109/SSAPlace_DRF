@@ -25,7 +25,7 @@ SECRET_KEY = '2d+%kq6q6r13+d=rhnb0rh+(c6lp@s24r33m4&ru2=!#+yl!e$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.compute.amazonaws.com', '*']
 
 
 # Application definition
@@ -158,3 +158,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # socket - channels
 ASGI_APPLICATION = 'SSAPlace_DRF.routing.application'
+
+
+# static
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
