@@ -14,7 +14,7 @@ def get_user(user_id):
     User = get_user_model()
     return get_object_or_404(User, id=user_id)
 
-class TeamListView(APIView):
+class TeamProfileListView(APIView):
     # TeamList
     def get(self, request, user_id):
         user = get_user(user_id)
@@ -23,6 +23,7 @@ class TeamListView(APIView):
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)
     
+class TeamListView(APIView):
     # TeamCreate
     def post(self, request):
         serializer = TeamSerializer(data=request.data)
@@ -70,6 +71,40 @@ class TeamDetailView(APIView):
         serializer = TeamSerializer(team, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            team.members.clear()
+            team.interests.clear()
+            team.front_language.clear()
+            team.back_language.clear()
+            User = get_user_model()
+            for member_id in request.data['members']:
+                member = get_object_or_404(User, id=member_id)
+                if not TeamMember.objects.filter(team=team, member=member).exists():
+                    team_interest = TeamMember()
+                    team_interest.team = team
+                    team_interest.member = member
+                    team_interest.save()
+            for interest_id in request.data['interests']:
+                interest = get_object_or_404(Interest, id=interest_id)
+                if not TeamInterest.objects.filter(team=team, interest=interest).exists():
+                    team_interest = TeamInterest()
+                    team_interest.team = team
+                    team_interest.interest = interest
+                    team_interest.save()
+            for front_id in request.data['front_language']:
+                front = get_object_or_404(UseLanguage, id=front_id)
+                if not FrontUse.objects.filter(team=team, front_language=front).exists():
+                    team_front = FrontUse()
+                    team_front.team = team
+                    team_front.front_language = front
+                    team_front.save()
+            for back_id in request.data['back_language']:
+                back = get_object_or_404(UseLanguage, id=back_id)
+                if not BackUse.objects.filter(team=team, back_language=back).exists():
+                    team_back = BackUse()
+                    team_back.team = team
+                    team_back.back_language = back
+                    team_back.save()
+
             return Response(serializer.data)
         return Response(serializer.errors)
     
