@@ -13,5 +13,5 @@ urlpatterns = [
     path('<str:board_name>/<int:article_id>/comments/', views.ArticleCommentListView.as_view()),
     path('<str:board_name>/<int:article_id>/comments/<int:comment_id>/', views.ArticleCommentDetailView.as_view()),
     path('<str:board_name>/<int:article_id>/like/', views.ArticleLikeView.as_view()),
-    path('<str:board_name>/search/<str:keyword>/', views.ArticleSearchView.as_view()),
+    path('<str:board_name>/search/<str:filter_name>/<str:keyword>/', views.ArticleSearchView.as_view()),
 ]
