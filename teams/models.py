@@ -78,7 +78,7 @@ class CollectMember(models.Model):
     ## 전공/비전공
     major = models.CharField(max_length=10, default='무관')
     # 우대 조건
-    preferential = models.TextField(null=True)
+    preferential = models.TextField(null=True, blank=True)
 
 
 
