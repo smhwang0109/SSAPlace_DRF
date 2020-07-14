@@ -10,6 +10,9 @@ from rest_framework.views import APIView
 def get_team(team_id):
     return get_object_or_404(Team, id=team_id)
 
+def get_collect_team(team):
+    return get_object_or_404(CollectTeam, team=team)
+
 def get_user(user_id):
     User = get_user_model()
     return get_object_or_404(User, id=user_id)
@@ -117,9 +120,6 @@ class TeamDetailView(APIView):
         
 
 
-def get_collect_team(collect_team_id):
-    return get_object_or_404(CollectTeam, id=collect_team_id)
-
 class CollectTeamListView(APIView):
     # CollectTeamList
     def get(self, request):
@@ -153,14 +153,16 @@ class CollectTeamCreateView(APIView):
 
 class CollectTeamDetailView(APIView):
     # CollectTeamDetail
-    def get(self, request, collect_team_id):
-        collect_team = get_collect_team(collect_team_id)
+    def get(self, request, team_id):
+        team = get_team(team_id)
+        collect_team = get_collect_team(team)
         serializer = CollectTeamSerializer(collect_team)
         return Response(serializer.data)
 
     # CollectTeamUpdate
-    def put(self, request, collect_team_id):
-        collect_team = get_collect_team(collect_team_id)
+    def put(self, request, team_id):
+        team = get_team(team_id)
+        collect_team = get_collect_team(team)
         serializer = CollectTeamSerializer(collect_team, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
