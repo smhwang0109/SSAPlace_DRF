@@ -7,6 +7,8 @@ from .serializers import TagListSerializer, SSAFYArticleListSerializer, SSAFYArt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import sys
+
 def get_article(model, article_id):
     return get_object_or_404(model, id=article_id)
 
@@ -165,18 +167,23 @@ class ArticleLikeView(APIView):
         return Response()
 
 class ArticleSearchView(APIView):
-    def get(self, request, board_name, keyword):
+    def get(self, request, board_name, filter_name, keyword):
         R = select_board(board_name)
-        searched_by_title = R['board_model'].objects.filter(title__icontains=keyword)
-        searched_by_content = R['board_model'].objects.filter(content__icontains=keyword)
-        searched_by_tag = R['board_model'].objects.none()
-        if board_name == 'ssafy':
-            for tag in Tag.objects.filter(name__icontains=keyword):
-                searched_by_tag = searched_by_tag.union(tag.ssafy_articles.all())
-        elif board_name == 'free':
-            for tag in Tag.objects.filter(name__icontains=keyword):
-                searched_by_tag = searched_by_tag.union(tag.free_articles.all())
-
-        searched_articles = searched_by_title.union(searched_by_content).union(searched_by_tag).order_by('-created_at')
+        if filter_name == 'title':
+            searched_articles = R['board_model'].objects.filter(title__icontains=keyword)
+        elif filter_name == 'content':
+            searched_articles = R['board_model'].objects.filter(content__icontains=keyword)
+        elif filter_name == 'tag':
+            searched_articles = R['board_model'].objects.none()
+            if board_name == 'ssafy':
+                for tag in Tag.objects.filter(name__icontains=keyword):
+                    searched_articles = searched_articles.union(tag.ssafy_articles.all())
+            elif board_name == 'free':
+                for tag in Tag.objects.filter(name__icontains=keyword):
+                    searched_articles = searched_articles.union(tag.free_articles.all())
+            elif board_name == 'code':
+                for tag in Tag.objects.filter(name__icontains=keyword):
+                    searched_articles = searched_articles.union(tag.code_articles.all())
+                    
         serializer = R['board_list_serializer'](searched_articles, many=True)
         return Response(serializer.data)
