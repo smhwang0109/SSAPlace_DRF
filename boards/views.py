@@ -7,6 +7,8 @@ from .serializers import TagListSerializer, SSAFYArticleListSerializer, SSAFYArt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+import sys
+
 def get_article(model, article_id):
     return get_object_or_404(model, id=article_id)
 
@@ -167,11 +169,11 @@ class ArticleLikeView(APIView):
 class ArticleSearchView(APIView):
     def get(self, request, board_name, filter_name, keyword):
         R = select_board(board_name)
-        if filter_name == '제목':
+        if filter_name == 'title':
             searched_articles = R['board_model'].objects.filter(title__icontains=keyword)
-        elif filter_name == '내용':
+        elif filter_name == 'content':
             searched_articles = R['board_model'].objects.filter(content__icontains=keyword)
-        elif filter_name == '태그':
+        elif filter_name == 'tag':
             searched_articles = R['board_model'].objects.none()
             if board_name == 'ssafy':
                 for tag in Tag.objects.filter(name__icontains=keyword):
