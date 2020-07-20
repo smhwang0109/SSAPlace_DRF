@@ -14,7 +14,7 @@ class SSAFYArticle(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     hit = models.IntegerField(default=0) # 조회수
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ssafy_articles')
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='ssafy_like_articles', through='SSAFYArticleLike')
@@ -33,7 +33,7 @@ class SSAFYArticleLike(models.Model):
 class SSAFYArticleComment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='ssafy_comments')
     article = models.ForeignKey(SSAFYArticle, on_delete=models.CASCADE, related_name='comments')
 
@@ -47,7 +47,7 @@ class FreeArticle(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     hit = models.IntegerField(default=0) # 조회수
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='free_articles')
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='free_like_articles', through='FreeArticleLike')
@@ -66,7 +66,7 @@ class FreeArticleLike(models.Model):
 class FreeArticleComment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='free_comments')
     article = models.ForeignKey(FreeArticle, on_delete=models.CASCADE, related_name='comments')
 
@@ -80,7 +80,7 @@ class CodeArticle(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     hit = models.IntegerField(default=0) # 조회수
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='code_articles')
     like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='code_like_articles', through='CodeArticleLike')
@@ -99,7 +99,7 @@ class CodeArticleLike(models.Model):
 class CodeArticleComment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='code_comments')
     article = models.ForeignKey(CodeArticle, on_delete=models.CASCADE, related_name='comments')
 
