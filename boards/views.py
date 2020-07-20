@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import sys
+import datetime
 
 def get_article(model, article_id):
     return get_object_or_404(model, id=article_id)
@@ -98,6 +99,7 @@ class ArticleDetailView(APIView):
         R = select_board(board_name)
         article = get_article(R['board_model'], article_id)
         article.tags.clear()
+        article.updated_at = datetime.datetime.now()
         serializer = R['board_detail_serializer'](article, data=request.data['body'])
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -141,6 +143,7 @@ class ArticleCommentDetailView(APIView):
     def put(self, request, board_name, article_id, comment_id):
         R = select_board(board_name)
         comment = get_comment(R['board_comment_model'], comment_id)
+        comment.updated_at = datetime.datetime.now()
         serializer = R['board_comment_serializer'](comment, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
